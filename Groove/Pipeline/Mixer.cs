@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DipBase;
+using NAudio.Wave.SampleProviders;
 
 namespace Groove.Pipeline
 {
@@ -14,7 +15,6 @@ namespace Groove.Pipeline
         public Master MasterC;
         public List<HardOut> HOuts;
         public List<HardInp> HInps;
-
         public Mixer()
         {
             Channels = new List<Channel>();
@@ -274,7 +274,6 @@ namespace Groove.Pipeline
                 LeftIndex = LI;
                 RightIndex = RI;
             }
-
             public String Name;
             public int LeftIndex;
             public int RightIndex;
