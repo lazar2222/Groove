@@ -8,22 +8,46 @@ namespace DipBase
 {
     public class Note
     {
+        public Note(double f,int v,int a,double p)
+        {
+            freq = f;
+            velocity = v;
+            aftertouch = a;
+            pitchbend = p;
+        }
+
         public double freq;
         public int velocity;
-        public int aftertoch;
-        public double pitcbend;
+        public int aftertouch;
+        public double pitchbend;
     }
 
     public class AutoParams
     {
+        public AutoParams(double ml,double mh,string n,double v)
+        {
+            min = ml;
+            max = mh;
+            name = n;
+            value = v;
+        }
+
         public double min;
         public double max;
         public string name;
+        public double value;
     }
 
     public class PluginInfo
     {
-        public int type;
+        public PluginInfo(PluginType t,string n,string v)
+        {
+            type = t;
+            name = n;
+            version = v;
+        }
+
+        public PluginType type;
         public string name;
         public string version;
 
@@ -36,13 +60,12 @@ namespace DipBase
         MidiEffect
     }
 
-    public interface Instrument
+    public interface Instrument : Input
     {
         PluginInfo GetPluginInfo();
         AutoParams[] GerAutomationParams();
         double GetAutomation(string name);
         void SetAutomation(string name, double value);
-        void Get(float[] output);
         void SetNote(Note note);
         void SetParams(Note note);
     }

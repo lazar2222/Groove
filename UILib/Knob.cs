@@ -56,7 +56,11 @@ namespace UILib
                 //val += e.Delta * inc*10;
                 if (val > max) { val = max; }
                 if (val < min) { val = min; }
-                ValChange(this, e);
+                try
+                {
+                    ValChange(this, e);
+                }
+                catch { }
                 Invalidate();
 
             }
@@ -87,7 +91,7 @@ namespace UILib
 
         private int pix()
         {
-            return 200 / step();
+            return Math.Max(200 / step(),1);
         }
 
         private double nmin() { return 0; }
