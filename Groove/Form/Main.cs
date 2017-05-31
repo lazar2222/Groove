@@ -1,4 +1,5 @@
 ﻿using Groove.Pipeline;
+using Groove.Test;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,11 +23,13 @@ namespace Groove
 
         Mixer m;
         Player p;
+        Sine s;
 
         private void Main_Load(object sender, EventArgs e)
         {
             //signal chain
 
+            s = new Sine();
             m = new Mixer();
             p = new Player(m);
             p.SetDevice(0);
@@ -34,8 +38,8 @@ namespace Groove
             m.PopHInps(p);
             m.PopHOuts(p);
             m.MasterC.Setup(m);
-            m.Channels.Add(new Mixer.Channel());
-            m.Channels[0].Input = m.HInps[0];
+            m.Channels.Add(new Mixer.Channel(64));
+            m.Channels[0].Input = s;
             m.Channels[0].level = 1;
             m.Channels[0].mute = false;
             m.Channels[0].name = "Track1";
@@ -52,6 +56,8 @@ namespace Groove
         private void button2_Click(object sender, EventArgs e)
         {
             p.ASIO.Stop();
+            Thread.Sleep(500);
+            p.w.Dispose();
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -68,6 +74,11 @@ namespace Groove
         private void trackBar1_ValueChanged(object sender, EventArgs e)
         {
             m.Channels[0].Pan = (float)trackBar2.Value/10;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            s.SetFreq(Convert.ToDouble(textBox1.Text), Convert.ToDouble(textBox2.Text));
         }
     }
 }

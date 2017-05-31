@@ -8,7 +8,7 @@ namespace DipBase
 {
     public class Note
     {
-        public Note(double f,int v,int a,double p)
+        public Note(double f, int v, int a, double p)
         {
             freq = f;
             velocity = v;
@@ -24,7 +24,7 @@ namespace DipBase
 
     public class AutoParams
     {
-        public AutoParams(double ml,double mh,string n,double v)
+        public AutoParams(double ml, double mh, string n, double v)
         {
             min = ml;
             max = mh;
@@ -40,7 +40,7 @@ namespace DipBase
 
     public class PluginInfo
     {
-        public PluginInfo(PluginType t,string n,string v)
+        public PluginInfo(PluginType t, string n, string v)
         {
             type = t;
             name = n;
@@ -76,16 +76,15 @@ namespace DipBase
         AutoParams[] GerAutomationParams();
         double GetAutomation(string name);
         void SetAutomation(string name, double value);
-        void Get(float[] output);
+        void Get(float[][] output);
     }
 
     public interface Input
     {
-        void Get(float[,] inp, int i, float[] stereo);
+        void Get(float[][] inp, float[][] stereo);
     }
     public interface Output
     {
-        void Set(float[] stereo);
-        void Set(float[] stereo, float[,] ou, int i);
+        void Set(float[][] stereo, float[][] ou);
     }
 }

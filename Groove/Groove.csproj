@@ -93,6 +93,7 @@
     <Compile Include="Pipeline\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Test\Sine.cs" />
     <EmbeddedResource Include="Form\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

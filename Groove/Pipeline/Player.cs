@@ -11,9 +11,10 @@ namespace Groove.Pipeline
 {
     class Player
     {
-        public  AsioOut ASIO;
-        public float[,] inpbuf;
-        public float[,] outbuf;
+        public AsioOut ASIO;
+        public WaveFileWriter w = new WaveFileWriter("out.wav", new WaveFormat(48000, 16, 1));
+        public float[][] inpbuf;
+        public float[][] outbuf;
         int selected_device;
         WaveFormat format;
         Mixer m;
@@ -51,8 +52,16 @@ namespace Groove.Pipeline
 
         private unsafe void ASIO_AudioAvailable(object sender, AsioAudioAvailableEventArgs e)
         {
-            if (inpbuf == null) { inpbuf = new float[e.SamplesPerBuffer, e.InputBuffers.Length];
-                                  outbuf = new float[e.SamplesPerBuffer, e.InputBuffers.Length];}
+            if (inpbuf == null)
+            {
+                inpbuf = new float[e.InputBuffers.Length][];
+                outbuf = new float[e.OutputBuffers.Length][];
+                for (int i = 0; i < e.OutputBuffers.Length; i++)
+                {
+                    inpbuf[i] = new float[e.SamplesPerBuffer];
+                    outbuf[i] = new float[e.SamplesPerBuffer];
+                }
+            }
             if (e.AsioSampleType == NAudio.Wave.Asio.AsioSampleType.Int32LSB)
             {
                 spb = e.SamplesPerBuffer;
@@ -63,16 +72,16 @@ namespace Groove.Pipeline
                 {
                     for (int j = 0; j < inp.Length; j++)
                     {
-                        inpbuf[i, j] = *((int*)inp[j] + i)/(float)int.MaxValue;
+                        inpbuf[j][i] = *((int*)inp[j] + i) / (float)int.MaxValue;
                     }
-                    m.Mix(inpbuf, outbuf,spb,ou.Length);
-                    //for (int j = 0; j < ou.Length; j++)
-                    //{
-                    //    outbuf[i, j] = inpbuf[i, j];
-                    //}
+                }
+                m.Mix(inpbuf, outbuf, spb, ou.Length);
+                w.WriteSamples(outbuf[0], 0, outbuf[0].Length);
+                for (int i = 0; i < spb; i++)
+                {
                     for (int j = 0; j < ou.Length; j++)
                     {
-                        *((int*)ou[j] + i) = (int)(outbuf[i,j]*(float)int.MaxValue);
+                        *((int*)ou[j] + i) = (int)(outbuf[j][i] * (float)int.MaxValue);
                     }
                 }
                 e.WrittenToOutputBuffers = true;

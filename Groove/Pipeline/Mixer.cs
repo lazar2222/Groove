@@ -19,25 +19,22 @@ namespace Groove.Pipeline
         {
             Channels = new List<Channel>();
             Buses = new List<Bus>();
-            MasterC = new Master();
+            MasterC = new Master(64);
             HOuts = new List<HardOut>();
             HInps = new List<HardInp>();
         }
 
-        public void Mix(float[,] inp, float[,] ou, int bufsize, int channelcount)
+        public void Mix(float[][] inp, float[][] ou, int bufsize, int channelcount)
         {
-            for (int i = 0; i < bufsize; i++)
+            for (int i = 0; i < Channels.Count; i++)
             {
-                foreach (Channel C in Channels)
-                {
-                    C.Process(inp, ou, i);
-                }
-                foreach (Bus B in Buses)
-                {
-                    B.Process(ou, i);
-                }
-                MasterC.Process(ou, i);
+                Channels[i].Process(inp, ou);
             }
+            for (int i = 0; i < Buses.Count; i++)
+            {
+                Buses[i].Process(ou);
+            }
+            MasterC.Process(ou);
         }
 
         public void PopHOuts(Player p)
@@ -72,56 +69,88 @@ namespace Groove.Pipeline
             public float Pan;
             public Dictionary<Bus, float> Sends;
             public Input Input;
-            float[] Stereo;
+            float[][] Stereo;
+            float[][] Stereo2;
 
-            public Channel()
+            public Channel(int bufsize)
             {
                 Sends = new Dictionary<Bus, float>();
                 Plugins = new List<AudioEffect>();
-                Stereo = new float[2];
+                Stereo = new float[2][];
+                Stereo2 = new float[2][];
+                for (int i = 0; i < 2; i++)
+                {
+                    Stereo[i] = new float[bufsize];
+                    Stereo2[i] = new float[bufsize];
+                }
             }
 
-            internal void Process(float[,] inp, float[,] ou, int i)
+            internal void Process(float[][] inp, float[][] ou)
             {
-                Input.Get(inp, i, Stereo);
+                Input.Get(inp, Stereo);
                 if (preE)
                 {
-                    foreach (AudioEffect P in Plugins)
+                    for (int i = 0; i < Plugins.Count(); i++)
                     {
-                        P.Get(Stereo);
+                        Plugins[i].Get(Stereo);
                     }
                 }
                 if (preS)
                 {
-                    foreach (KeyValuePair<Bus, float> K in Sends)
+                    for (int n = 0; n < Sends.Count; n++)
                     {
-                        Stereo[0] *= K.Value;
-                        Stereo[1] *= K.Value;
-                        K.Key.Set(Stereo);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            for (int j = 0; j < Stereo[0].Length / 2; j++)
+                            {
+                                Stereo2[i][j] = Stereo[i][j] * Sends.ElementAt(n).Value;
+                            }
+                        }
+                        Sends.ElementAt(n).Key.Set(Stereo2, ou);
                     }
                 }
-                Stereo[0] *= level;
-                Stereo[1] *= level;
-                Stereo[0] *= 1 + Math.Min(-1 * Pan, 0);
-                Stereo[1] *= 1 + Math.Min(Pan, 0);
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < Stereo[0].Length; j++)
+                    {
+                        Stereo[i][j] *= level;
+                        Stereo[i][j] *= level;
+                        Stereo[i][j] *= 1 + Math.Min(-1 * Pan, 0);
+                        Stereo[i][j] *= 1 + Math.Min(Pan, 0);
+                    }
+                }
                 if (!preE)
                 {
-                    foreach (AudioEffect P in Plugins)
+                    for (int i = 0; i < Plugins.Count(); i++)
                     {
-                        P.Get(Stereo);
+                        Plugins[i].Get(Stereo);
                     }
                 }
                 if (!preS)
                 {
-                    foreach (KeyValuePair<Bus, float> K in Sends)
+                    for (int n = 0; n < Sends.Count; n++)
                     {
-                        Stereo[0] *= K.Value;
-                        Stereo[1] *= K.Value;
-                        K.Key.Set(Stereo);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            for (int j = 0; j < Stereo[0].Length; j++)
+                            {
+                                Stereo2[i][j] = Stereo[i][j] * Sends.ElementAt(n).Value;
+                            }
+                        }
+                        Sends.ElementAt(n).Key.Set(Stereo2, ou);
                     }
                 }
-                if (mute) { Stereo[0] = 0; Stereo[1] = 0; }
-                Output.Set(Stereo, ou, i);
+                if (mute)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < Stereo[0].Length; j++)
+                        {
+                            Stereo[i][j] = 0;
+                        }
+                    }
+                }
+                Output.Set(Stereo, ou);
 
             }
         }
@@ -130,77 +159,116 @@ namespace Groove.Pipeline
         {
             public float Pan;
             public Dictionary<Bus, float> Sends;
-            public float[] Stereo;
+            float[][] Stereo;
+            float[][] Stereo2;
 
-            public Bus()
+            public Bus(int bufsize)
             {
                 Sends = new Dictionary<Bus, float>();
                 Plugins = new List<AudioEffect>();
+                Stereo = new float[2][];
+                Stereo2 = new float[2][];
+                for (int i = 0; i < 2; i++)
+                {
+                    Stereo[i] = new float[bufsize];
+                    Stereo2[i] = new float[bufsize];
+                }
             }
 
-            public void Set(float[] stereo)
+            public void Set(float[][] stereo, float[][] ou)
             {
-                Stereo = stereo;
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < Stereo[0].Length; j++)
+                    {
+                        Stereo[i][j] = +stereo[i][j];
+                    }
+                }
             }
 
-            public void Set(float[] stereo, float[,] ou, int i)
-            {
-                Stereo = stereo;
-            }
-
-            internal void Process(float[,] ou, int i)
+            internal void Process(float[][] ou)
             {
                 if (preE)
                 {
-                    foreach (AudioEffect P in Plugins)
+                    for (int i = 0; i < Plugins.Count(); i++)
                     {
-                        P.Get(Stereo);
+                        Plugins[i].Get(Stereo);
                     }
                 }
                 if (preS)
                 {
-                    foreach (KeyValuePair<Bus, float> K in Sends)
+                    for (int n = 0; n < Sends.Count; n++)
                     {
-                        Stereo[0] *= K.Value;
-                        Stereo[1] *= K.Value;
-                        K.Key.Set(Stereo);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            for (int j = 0; j < Stereo[0].Length; j++)
+                            {
+                                Stereo2[i][j] = Stereo[i][j] * Sends.ElementAt(n).Value;
+                            }
+                        }
+                        Sends.ElementAt(n).Key.Set(Stereo2, ou);
                     }
                 }
-                Stereo[0] *= level;
-                Stereo[1] *= level;
-                Stereo[0] *= 1 + Math.Min(-1 * Pan, 0);
-                Stereo[1] *= 1 + Math.Min(Pan, 0);
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < Stereo[0].Length; j++)
+                    {
+                        Stereo[i][j] *= level;
+                        Stereo[i][j] *= level;
+                        Stereo[i][j] *= 1 + Math.Min(-1 * Pan, 0);
+                        Stereo[i][j] *= 1 + Math.Min(Pan, 0);
+                    }
+                }
                 if (!preE)
                 {
-                    foreach (AudioEffect P in Plugins)
+                    for (int i = 0; i < Plugins.Count(); i++)
                     {
-                        P.Get(Stereo);
+                        Plugins[i].Get(Stereo);
                     }
                 }
                 if (!preS)
                 {
-                    foreach (KeyValuePair<Bus, float> K in Sends)
+                    for (int n = 0; n < Sends.Count; n++)
                     {
-                        Stereo[0] *= K.Value;
-                        Stereo[1] *= K.Value;
-                        K.Key.Set(Stereo);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            for (int j = 0; j < Stereo[0].Length; j++)
+                            {
+                                Stereo2[i][j] = Stereo[i][j] * Sends.ElementAt(n).Value;
+                            }
+                        }
+                        Sends.ElementAt(n).Key.Set(Stereo2, ou);
                     }
                 }
-                if (mute) { Stereo[0] = 0; Stereo[1] = 0; }
-                Output.Set(Stereo, ou, i);
+                if (mute)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < Stereo[0].Length; j++)
+                        {
+                            Stereo[i][j] = 0;
+                        }
+                    }
+                }
+                Output.Set(Stereo, ou);
             }
         }
 
         public class Master : BaseChannel, Output
         {
-            public float[] Stereo;
+            public float[][] Stereo;
 
-            public Master()
+            public Master(int bufsize)
             {
                 name = "Master";
                 mute = false;
                 level = 1;
                 Plugins = new List<AudioEffect>();
+                Stereo = new float[2][];
+                for (int i = 0; i < 2; i++)
+                {
+                    Stereo[i] = new float[bufsize];
+                }
             }
 
             public void Setup(Mixer m)
@@ -208,36 +276,52 @@ namespace Groove.Pipeline
                 Output = m.HOuts[0];
             }
 
-            public void Set(float[] stereo)
+            public void Set(float[][] stereo, float[][] ou)
             {
-                Stereo = stereo;
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < Stereo[0].Length; j++)
+                    {
+                        Stereo[i][j] = +stereo[i][j];
+                    }
+                }
             }
 
-            public void Set(float[] stereo, float[,] ou, int i)
-            {
-                Stereo = stereo;
-            }
-
-            internal void Process(float[,] ou, int i)
+            internal void Process(float[][] ou)
             {
                 if (preE)
                 {
-                    foreach (AudioEffect P in Plugins)
+                    for (int i = 0; i < Plugins.Count(); i++)
                     {
-                        P.Get(Stereo);
+                        Plugins[i].Get(Stereo);
                     }
                 }
-                Stereo[0] *= level;
-                Stereo[1] *= level;
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < Stereo[0].Length; j++)
+                    {
+                        Stereo[i][j] *= level;
+                        Stereo[i][j] *= level;
+                    }
+                }
                 if (!preE)
                 {
-                    foreach (AudioEffect P in Plugins)
+                    for (int i = 0; i < Plugins.Count(); i++)
                     {
-                        P.Get(Stereo);
+                        Plugins[i].Get(Stereo);
                     }
                 }
-                if (mute) { Stereo[0] = 0; Stereo[1] = 0; }
-                Output.Set(Stereo, ou, i);
+                if (mute)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 0; j < Stereo[0].Length; j++)
+                        {
+                            Stereo[i][j] = 0;
+                        }
+                    }
+                }
+                Output.Set(Stereo, ou);
             }
         }
 
@@ -254,15 +338,13 @@ namespace Groove.Pipeline
             public int LeftIndex;
             public int RightIndex;
 
-            public void Set(float[] stereo)
+            public void Set(float[][] stereo, float[][] ou)
             {
-
-            }
-
-            public void Set(float[] stereo, float[,] ou, int i)
-            {
-                ou[i, LeftIndex] = stereo[0];
-                ou[i, RightIndex] = stereo[1];
+                for (int j = 0; j < stereo[0].Length; j++)
+                {
+                    ou[LeftIndex][j] = stereo[0][j];
+                    ou[RightIndex][j] = stereo[1][j];
+                }
             }
         }
 
@@ -278,10 +360,14 @@ namespace Groove.Pipeline
             public int LeftIndex;
             public int RightIndex;
 
-            public void Get(float[,] inp, int i, float[] stereo)
+            public void Get(float[][] inp, float[][] stereo)
             {
-                stereo[0] = inp[i, LeftIndex];
-                stereo[1] = inp[i, RightIndex];
+
+                for (int j = 0; j < stereo[0].Length; j++)
+                {
+                    stereo[0][j] = inp[j][LeftIndex];
+                    stereo[1][j] = inp[j][RightIndex];
+                }
             }
 
         }
