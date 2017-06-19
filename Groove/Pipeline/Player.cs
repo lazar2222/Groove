@@ -9,10 +9,9 @@ using System.Windows;
 
 namespace Groove.Pipeline
 {
-    class Player
+    public class Player
     {
         public AsioOut ASIO;
-        public WaveFileWriter w = new WaveFileWriter("out.wav", new WaveFormat(48000, 16, 1));
         public float[][] inpbuf;
         public float[][] outbuf;
         int selected_device;
@@ -76,7 +75,6 @@ namespace Groove.Pipeline
                     }
                 }
                 m.Mix(inpbuf, outbuf, spb, ou.Length);
-                w.WriteSamples(outbuf[0], 0, outbuf[0].Length);
                 for (int i = 0; i < spb; i++)
                 {
                     for (int j = 0; j < ou.Length; j++)

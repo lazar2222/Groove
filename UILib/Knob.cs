@@ -18,7 +18,6 @@ namespace UILib
             stringFormat.Alignment = StringAlignment.Center;
             stringFormat.LineAlignment = StringAlignment.Center;
         }
-
         public double min;
         public double max;
         public double val;
@@ -26,6 +25,7 @@ namespace UILib
         public double def;
         public bool lab;
         public string label;
+
 
         public event EventHandler ValChange;
 
@@ -82,8 +82,8 @@ namespace UILib
             e.Graphics.DrawArc(new Pen(Color.Black, 2), 5, 5, 65, 65, 120, 300);
             e.Graphics.DrawArc(new Pen(Color.Orange, 3), 5, 5, 65, 65, 120 + ((float)(ndef() / nmax()) * 300), 300 * (float)((nval() - ndef()) / nmax()));
             e.Graphics.DrawLine(new Pen(Color.Black, 2), 75 / 2, 75 / 2,
-                75 / 2 - (30 * (float)Math.Cos((270 - (300 * ((nval() - ndef()) / nmax()))) * Math.PI / 180)),
-                75 / 2 + (30 * (float)Math.Sin((270 - (300 * ((nval() - ndef()) / nmax()))) * Math.PI / 180))
+                75 / 2 - (30 * (float)Math.Cos((60-(300 * ((nval() - ndef()) / nmax()))) * Math.PI / 180)),
+                75 / 2 + (30 * (float)Math.Sin((60-(300 * ((nval() - ndef()) / nmax()))) * Math.PI / 180))
                 );
 
 
@@ -91,7 +91,7 @@ namespace UILib
 
         private int pix()
         {
-            return Math.Max(200 / step(),1);
+            return Math.Max(200 / step(), 1);
         }
 
         private double nmin() { return 0; }

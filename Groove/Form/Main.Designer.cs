@@ -28,137 +28,241 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
-            this.trackBar1 = new System.Windows.Forms.TrackBar();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.trackBar2 = new System.Windows.Forms.TrackBar();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button4 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tracksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addTrackToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addBusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pianoRollToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playlistToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.playToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pauseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.beginingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tempoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.writeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.renderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startAudioEngineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopAudioEngineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // trackBar1
+            // menuStrip1
             // 
-            this.trackBar1.LargeChange = 10;
-            this.trackBar1.Location = new System.Drawing.Point(56, 12);
-            this.trackBar1.Maximum = 150;
-            this.trackBar1.Name = "trackBar1";
-            this.trackBar1.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.trackBar1.Size = new System.Drawing.Size(45, 104);
-            this.trackBar1.SmallChange = 2;
-            this.trackBar1.TabIndex = 0;
-            this.trackBar1.TickFrequency = 20;
-            this.trackBar1.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar1.Value = 100;
-            this.trackBar1.ValueChanged += new System.EventHandler(this.trackBar2_ValueChanged);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.tracksToolStripMenuItem,
+            this.pianoRollToolStripMenuItem,
+            this.playlistToolStripMenuItem,
+            this.playToolStripMenuItem,
+            this.pauseToolStripMenuItem,
+            this.stopToolStripMenuItem,
+            this.beginingToolStripMenuItem,
+            this.loopToolStripMenuItem,
+            this.tempoToolStripMenuItem,
+            this.recordToolStripMenuItem,
+            this.writeToolStripMenuItem,
+            this.renderToolStripMenuItem,
+            this.startAudioEngineToolStripMenuItem,
+            this.stopAudioEngineToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1350, 24);
+            this.menuStrip1.TabIndex = 26;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // button1
+            // fileToolStripMenuItem
             // 
-            this.button1.Location = new System.Drawing.Point(157, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "Start";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
+            this.preferencesToolStripMenuItem});
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
             // 
-            // button2
+            // openToolStripMenuItem
             // 
-            this.button2.Location = new System.Drawing.Point(157, 41);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Stop";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Text = "Open";
             // 
-            // button3
+            // saveToolStripMenuItem
             // 
-            this.button3.Location = new System.Drawing.Point(157, 70);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Mute";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Text = "Save";
             // 
-            // trackBar2
+            // preferencesToolStripMenuItem
             // 
-            this.trackBar2.Location = new System.Drawing.Point(12, 122);
-            this.trackBar2.Minimum = -10;
-            this.trackBar2.Name = "trackBar2";
-            this.trackBar2.Size = new System.Drawing.Size(104, 45);
-            this.trackBar2.TabIndex = 9;
-            this.trackBar2.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBar2.ValueChanged += new System.EventHandler(this.trackBar1_ValueChanged);
+            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.preferencesToolStripMenuItem.Text = "Preferences";
             // 
-            // textBox1
+            // tracksToolStripMenuItem
             // 
-            this.textBox1.Location = new System.Drawing.Point(1152, 12);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
-            this.textBox1.TabIndex = 10;
-            this.textBox1.Text = "2000";
+            this.tracksToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.addTrackToolStripMenuItem,
+            this.addBusToolStripMenuItem});
+            this.tracksToolStripMenuItem.Name = "tracksToolStripMenuItem";
+            this.tracksToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.tracksToolStripMenuItem.Text = "Tracks";
             // 
-            // textBox2
+            // addTrackToolStripMenuItem
             // 
-            this.textBox2.Location = new System.Drawing.Point(1152, 39);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
-            this.textBox2.TabIndex = 11;
-            this.textBox2.Text = "127";
+            this.addTrackToolStripMenuItem.Name = "addTrackToolStripMenuItem";
+            this.addTrackToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.addTrackToolStripMenuItem.Text = "Add Track";
+            this.addTrackToolStripMenuItem.Click += new System.EventHandler(this.addTrackToolStripMenuItem_Click);
             // 
-            // button4
+            // addBusToolStripMenuItem
             // 
-            this.button4.Location = new System.Drawing.Point(1177, 66);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 12;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.addBusToolStripMenuItem.Name = "addBusToolStripMenuItem";
+            this.addBusToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.addBusToolStripMenuItem.Text = "Add Bus";
+            this.addBusToolStripMenuItem.Click += new System.EventHandler(this.addBusToolStripMenuItem_Click);
+            // 
+            // pianoRollToolStripMenuItem
+            // 
+            this.pianoRollToolStripMenuItem.Name = "pianoRollToolStripMenuItem";
+            this.pianoRollToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
+            this.pianoRollToolStripMenuItem.Text = "Piano Roll";
+            this.pianoRollToolStripMenuItem.Click += new System.EventHandler(this.pianoRollToolStripMenuItem_Click);
+            // 
+            // playlistToolStripMenuItem
+            // 
+            this.playlistToolStripMenuItem.Name = "playlistToolStripMenuItem";
+            this.playlistToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.playlistToolStripMenuItem.Text = "Playlist";
+            // 
+            // playToolStripMenuItem
+            // 
+            this.playToolStripMenuItem.Name = "playToolStripMenuItem";
+            this.playToolStripMenuItem.Size = new System.Drawing.Size(41, 20);
+            this.playToolStripMenuItem.Text = "Play";
+            // 
+            // pauseToolStripMenuItem
+            // 
+            this.pauseToolStripMenuItem.Name = "pauseToolStripMenuItem";
+            this.pauseToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
+            this.pauseToolStripMenuItem.Text = "Pause";
+            // 
+            // stopToolStripMenuItem
+            // 
+            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(43, 20);
+            this.stopToolStripMenuItem.Text = "Stop";
+            // 
+            // beginingToolStripMenuItem
+            // 
+            this.beginingToolStripMenuItem.Name = "beginingToolStripMenuItem";
+            this.beginingToolStripMenuItem.Size = new System.Drawing.Size(66, 20);
+            this.beginingToolStripMenuItem.Text = "Begining";
+            // 
+            // loopToolStripMenuItem
+            // 
+            this.loopToolStripMenuItem.Name = "loopToolStripMenuItem";
+            this.loopToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.loopToolStripMenuItem.Text = "Loop";
+            // 
+            // tempoToolStripMenuItem
+            // 
+            this.tempoToolStripMenuItem.Name = "tempoToolStripMenuItem";
+            this.tempoToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.tempoToolStripMenuItem.Text = "Tempo";
+            // 
+            // recordToolStripMenuItem
+            // 
+            this.recordToolStripMenuItem.Name = "recordToolStripMenuItem";
+            this.recordToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.recordToolStripMenuItem.Text = "Record";
+            // 
+            // writeToolStripMenuItem
+            // 
+            this.writeToolStripMenuItem.Name = "writeToolStripMenuItem";
+            this.writeToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.writeToolStripMenuItem.Text = "Write";
+            // 
+            // renderToolStripMenuItem
+            // 
+            this.renderToolStripMenuItem.Name = "renderToolStripMenuItem";
+            this.renderToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.renderToolStripMenuItem.Text = "Render";
+            // 
+            // startAudioEngineToolStripMenuItem
+            // 
+            this.startAudioEngineToolStripMenuItem.Name = "startAudioEngineToolStripMenuItem";
+            this.startAudioEngineToolStripMenuItem.Size = new System.Drawing.Size(117, 20);
+            this.startAudioEngineToolStripMenuItem.Text = "Start Audio Engine";
+            this.startAudioEngineToolStripMenuItem.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // stopAudioEngineToolStripMenuItem
+            // 
+            this.stopAudioEngineToolStripMenuItem.Name = "stopAudioEngineToolStripMenuItem";
+            this.stopAudioEngineToolStripMenuItem.Size = new System.Drawing.Size(117, 20);
+            this.stopAudioEngineToolStripMenuItem.Text = "Stop Audio Engine";
+            this.stopAudioEngineToolStripMenuItem.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 66;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScroll = true;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.ClientSize = new System.Drawing.Size(1264, 681);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.trackBar2);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.trackBar1);
+            this.ClientSize = new System.Drawing.Size(1350, 729);
+            this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
+            this.MainMenuStrip = this.menuStrip1;
             this.MinimumSize = new System.Drawing.Size(1280, 720);
             this.Name = "Main";
             this.Text = "GROOVE";
             this.Load += new System.EventHandler(this.Main_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).EndInit();
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.Main_KeyUp);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TrackBar trackBar1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.TrackBar trackBar2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tracksToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addTrackToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addBusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pianoRollToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playlistToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem playToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stopToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recordToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem writeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem renderToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem startAudioEngineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stopAudioEngineToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pauseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem beginingToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loopToolStripMenuItem;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.ToolStripMenuItem tempoToolStripMenuItem;
     }
 }
 

@@ -71,6 +71,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -82,20 +83,61 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Trackb.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Trackb.Designer.cs">
+      <DependentUpon>Trackb.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Trackm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Trackm.Designer.cs">
+      <DependentUpon>Trackm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Form\Main.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form\Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\PianoRoll.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\PianoRoll.Designer.cs">
+      <DependentUpon>PianoRoll.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\Prompt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\Prompt.Designer.cs">
+      <DependentUpon>Prompt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Pipeline\Global.cs" />
     <Compile Include="Pipeline\Mixer.cs" />
     <Compile Include="Pipeline\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Test\Sine.cs" />
+    <Compile Include="Controls\Track.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Track.Designer.cs">
+      <DependentUpon>Track.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Controls\Trackb.resx">
+      <DependentUpon>Trackb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Trackm.resx">
+      <DependentUpon>Trackm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form\Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\PianoRoll.resx">
+      <DependentUpon>PianoRoll.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\Prompt.resx">
+      <DependentUpon>Prompt.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -105,7 +147,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Controls\Track.resx">
+      <DependentUpon>Track.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -133,6 +179,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Capture2.png" />
     <Content Include="Resources\favicon.ico" />
     <Content Include="Resources\logo.png" />
   </ItemGroup>
@@ -141,10 +188,13 @@
       <Project>{d3f16f86-0640-455b-915f-9554d0a54191}</Project>
       <Name>DipBase</Name>
     </ProjectReference>
-    <ProjectReference Include="..\UILib\UILib.csproj">
-      <Project>{99C9377F-D7C3-421D-ADB7-AF68EFCFEB6C}</Project>
-      <Name>UILib</Name>
+    <ProjectReference Include="..\NoteLib\NoteLib.csproj">
+      <Project>{c1876b09-5703-4abb-a24e-1af3a352dcf5}</Project>
+      <Name>NoteLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Test\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

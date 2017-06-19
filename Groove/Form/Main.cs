@@ -1,5 +1,6 @@
-﻿using Groove.Pipeline;
-using Groove.Test;
+﻿using DipBase;
+using Groove.Controls;
+using Groove.Pipeline;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,15 +22,44 @@ namespace Groove
             InitializeComponent();
         }
 
-        Mixer m;
+        public Mixer m;
+        public List<Instrument> inst;
+        public List<AudioEffect> eff;
+        public List<Trackb> TB;
+        public List<Track> TC;
+        public int x = 3;
         Player p;
-        Sine s;
+        bool[] arr = new bool[16];
+        public int selectedINST = 0;
+        int vel = 60;
+        int octave = 4;
+        
 
         private void Main_Load(object sender, EventArgs e)
         {
-            //signal chain
+            inst = new List<Instrument>();
+            eff = new List<AudioEffect>();
+            TB = new List<Trackb>();
+            TC = new List<Track>();
+            string s = @"D:\SUBsynth\GROVE\Groove\Groove\bin\Debug\Plugins";
+            foreach (var item in System.IO.Directory.EnumerateFiles(s))
+            {
+                var DLL = Assembly.LoadFile(item);
 
-            s = new Sine();
+                foreach (Type type in DLL.GetExportedTypes())
+                {
+                    try
+                    {
+                        dynamic c = Activator.CreateInstance(type,48000);
+                        PluginInfo p = c.GetPluginInfo();
+                        if (p.type == PluginType.AudioEffect) { eff.Add(c); }
+                        else { inst.Add(c); }
+                    }
+                    catch { Console.WriteLine(type + " Is not a plugn"); }
+                }
+            }
+            timer1.Start();
+            //signal chain
             m = new Mixer();
             p = new Player(m);
             p.SetDevice(0);
@@ -38,47 +68,104 @@ namespace Groove
             m.PopHInps(p);
             m.PopHOuts(p);
             m.MasterC.Setup(m);
-            m.Channels.Add(new Mixer.Channel(64));
-            m.Channels[0].Input = s;
-            m.Channels[0].level = 1;
-            m.Channels[0].mute = false;
-            m.Channels[0].name = "Track1";
-            m.Channels[0].Output = m.MasterC;
-            m.Channels[0].Pan = 0;
-
+            selectedINST = 0;
+            Trackm t = new Trackm(this, m.MasterC);
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-           p.ASIO.Play();
+            p.ASIO.Play();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             p.ASIO.Stop();
-            Thread.Sleep(500);
-            p.w.Dispose();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Main_KeyDown(object sender, KeyEventArgs e)
         {
-            m.MasterC.mute = !m.MasterC.mute;
+            
+            switch (e.KeyCode)
+            {
+                case Keys.Z: { if (arr[0] != true) { octave--; if (octave < 0) { octave = 0; } } arr[0] = true; break; }
+                case Keys.X: { if (arr[1] != true) { octave++; if (octave > 8) { octave = 8; } } arr[1] = true; break; }
+                case Keys.V: { if (arr[2] != true) { vel += 10; if (vel > 127) { vel = 127; } } arr[2] = true; break; }
+                case Keys.C: { if (arr[3] != true) { vel -= 10; if (vel < 1) { vel = 1; } } arr[3] = true; break; }
+                case Keys.A: { if (arr[4] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["C" + octave.ToString()], vel, 0, 0)); } catch { } } arr[4] = true; break; }
+                case Keys.W: { if (arr[5] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["C#" + octave.ToString()], vel, 0, 0)); } catch { } } arr[5] = true; break; }
+                case Keys.S: { if (arr[6] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["D" + octave.ToString()], vel, 0, 0)); } catch { } } arr[6] = true; break; }
+                case Keys.E: { if (arr[7] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["D#" + octave.ToString()], vel, 0, 0)); } catch { } } arr[7] = true; break; }
+                case Keys.D: { if (arr[8] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["E" + octave.ToString()], vel, 0, 0)); } catch { } } arr[8] = true; break; }
+                case Keys.F: { if (arr[9] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["F" + octave.ToString()], vel, 0, 0)); } catch { } } arr[9] = true; break; }
+                case Keys.T: { if (arr[10] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["F#" + octave.ToString()], vel, 0, 0)); } catch { } } arr[10] = true; break; }
+                case Keys.G: { if (arr[11] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["G" + octave.ToString()], vel, 0, 0)); } catch { } } arr[11] = true; break; }
+                case Keys.Y: { if (arr[12] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["G#" + octave.ToString()], vel, 0, 0)); } catch { } } arr[12] = true; break; }
+                case Keys.H: { if (arr[13] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["A" + octave.ToString()], vel, 0, 0)); } catch { } } arr[13] = true; break; }
+                case Keys.U: { if (arr[14] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["A#" + octave.ToString()], vel, 0, 0)); } catch { } } arr[14] = true; break; }
+                case Keys.J: { if (arr[15] != true) { try { ((Instrument)m.Channels[selectedINST].Input).SetNote(new Note(NoteLib.NoteLib.LUT["B" + octave.ToString()], vel, 0, 0)); } catch { } } arr[15] = true; break; }
+            }
         }
 
-        private void trackBar2_ValueChanged(object sender, EventArgs e)
+        private void Main_KeyUp(object sender, KeyEventArgs e)
         {
-            m.MasterC.level = (float)trackBar1.Value/100;
+            
+            switch (e.KeyCode)
+            {
+                case Keys.Z: { if (arr[0] != false) { } arr[0] = false; break; }
+                case Keys.X: { if (arr[1] != false) { } arr[1] = false; break; }
+                case Keys.C: { if (arr[2] != false) { } arr[2] = false; break; }
+                case Keys.V: { if (arr[3] != false) { } arr[3] = false; break; }
+                case Keys.A: { if (arr[4] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["C" + octave.ToString()], 0, 0, 0)); } catch { } } arr[4] = false; break; }
+                case Keys.W: { if (arr[5] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["C#" + octave.ToString()], 0, 0, 0)); } catch { } } arr[5] = false; break; }
+                case Keys.S: { if (arr[6] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["D" + octave.ToString()], 0, 0, 0)); } catch { } } arr[6] = false; break; }
+                case Keys.E: { if (arr[7] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["D#" + octave.ToString()], 0, 0, 0)); } catch { } } arr[7] = false; break; }
+                case Keys.D: { if (arr[8] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["E" + octave.ToString()], 0, 0, 0)); } catch { } } arr[8] = false; break; }
+                case Keys.F: { if (arr[9] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["F" + octave.ToString()], 0, 0, 0)); } catch { } } arr[9] = false; break; }
+                case Keys.T: { if (arr[10] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["F#" + octave.ToString()], 0, 0, 0)); } catch { } } arr[10] = false; break; }
+                case Keys.G: { if (arr[11] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["G" + octave.ToString()], 0, 0, 0)); } catch { } } arr[11] = false; break; }
+                case Keys.Y: { if (arr[12] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["G#" + octave.ToString()], 0, 0, 0)); } catch { } } arr[12] = false; break; }
+                case Keys.H: { if (arr[13] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["A" + octave.ToString()], 0, 0, 0)); } catch { } } arr[13] = false; break; }
+                case Keys.U: { if (arr[14] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["A#" + octave.ToString()], 0, 0, 0)); } catch { } } arr[14] = false; break; }
+                case Keys.J: { if (arr[15] != false) { try { ((Instrument)m.Channels[selectedINST].Input).SetParams(new Note(NoteLib.NoteLib.LUT["B" + octave.ToString()], 0, 0, 0)); } catch { } } arr[15] = false; break; }
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            Refresh();
+        }
+
+        private void addTrackToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Prompt(this, true);
+            Reorder();
             
         }
 
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        private void addBusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            m.Channels[0].Pan = (float)trackBar2.Value/10;
+            new Prompt(this, false);
+            Reorder();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        public void Reorder()
         {
-            s.SetFreq(Convert.ToDouble(textBox1.Text), Convert.ToDouble(textBox2.Text));
+            x = 133;
+            for (int i = 0; i < TC.Count; i++)
+            {
+                TC[i].Location = new Point(x, 27);
+                x += 130;
+            }
+            for (int i = 0; i < TB.Count; i++)
+            {
+                TB[i].Location = new Point(x, 27);
+                x += 130;
+            }
+        }
+
+        private void pianoRollToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new PianoRoll(1).Show();
         }
     }
 }

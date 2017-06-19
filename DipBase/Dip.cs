@@ -22,21 +22,6 @@ namespace DipBase
         public double pitchbend;
     }
 
-    public class AutoParams
-    {
-        public AutoParams(double ml, double mh, string n, double v)
-        {
-            min = ml;
-            max = mh;
-            name = n;
-            value = v;
-        }
-
-        public double min;
-        public double max;
-        public string name;
-        public double value;
-    }
 
     public class PluginInfo
     {
@@ -56,27 +41,28 @@ namespace DipBase
     public enum PluginType
     {
         Instrument,
-        AudioEffect,
-        MidiEffect
+        AudioEffect
     }
 
     public interface Instrument : Input
     {
         PluginInfo GetPluginInfo();
-        AutoParams[] GerAutomationParams();
+        string[] GerAutomationParams();
         double GetAutomation(string name);
         void SetAutomation(string name, double value);
         void SetNote(Note note);
         void SetParams(Note note);
+        void ShowUI();
     }
 
     public interface AudioEffect
     {
         PluginInfo GetPluginInfo();
-        AutoParams[] GerAutomationParams();
+        string[] GerAutomationParams();
         double GetAutomation(string name);
         void SetAutomation(string name, double value);
         void Get(float[][] output);
+        void ShowUI();
     }
 
     public interface Input
