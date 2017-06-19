@@ -178,6 +178,7 @@ namespace Groove.Controls
                 if (MessageBox.Show("Do you raly want to delete this track", "Confiramtion", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     m.m.Channels.Remove(mc);
+                    if( m.piano.Notes.ContainsKey(mc)){ m.piano.Notes.Remove(mc); m.piano.trackToolStripMenuItem_Click(this, new EventArgs()); }
                     m.TC.Remove(this);
                     m.Reorder();
                     m.Controls.Remove(this);

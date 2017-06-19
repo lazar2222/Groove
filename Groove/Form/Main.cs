@@ -22,6 +22,7 @@ namespace Groove
             InitializeComponent();
         }
 
+        public PianoRoll piano;
         public Mixer m;
         public List<Instrument> inst;
         public List<AudioEffect> eff;
@@ -41,6 +42,7 @@ namespace Groove
             eff = new List<AudioEffect>();
             TB = new List<Trackb>();
             TC = new List<Track>();
+            piano = new PianoRoll(1,this);
             string s = @"D:\SUBsynth\GROVE\Groove\Groove\bin\Debug\Plugins";
             foreach (var item in System.IO.Directory.EnumerateFiles(s))
             {
@@ -165,7 +167,44 @@ namespace Groove
 
         private void pianoRollToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new PianoRoll(1).Show();
+            piano.Show();
+        }
+
+        private void tempoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new Tempo(this);
+        }
+
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            piano.timer1.Stop();
+            piano.Clean();
+        }
+
+        private void playToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            piano.timer1.Start();
+        }
+
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            piano.timer1.Stop();
+            piano.Clean();
+            piano.php = 0;
+            piano.trackBar1.Value = piano.php;
+        }
+
+        private void beginingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            piano.php = 0;
+            piano.trackBar1.Value = piano.php;
+        }
+
+        private void loopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            piano.loop = !piano.loop;
+            if (piano.loop) { loopToolStripMenuItem.BackColor = Color.Lime; }
+            else { loopToolStripMenuItem.BackColor = SystemColors.ControlLight; }
         }
     }
 }

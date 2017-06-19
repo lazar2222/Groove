@@ -124,6 +124,18 @@
     <Compile Include="Controls\Track.Designer.cs">
       <DependentUpon>Track.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form\Tempo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\Tempo.Designer.cs">
+      <DependentUpon>Tempo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form\TrackF.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form\TrackF.Designer.cs">
+      <DependentUpon>TrackF.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Controls\Trackb.resx">
       <DependentUpon>Trackb.cs</DependentUpon>
     </EmbeddedResource>
@@ -139,6 +151,9 @@
     <EmbeddedResource Include="Form\Prompt.resx">
       <DependentUpon>Prompt.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Form\TrackF.resx">
+      <DependentUpon>TrackF.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -151,6 +166,9 @@
     </Compile>
     <EmbeddedResource Include="Controls\Track.resx">
       <DependentUpon>Track.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form\Tempo.resx">
+      <DependentUpon>Tempo.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
