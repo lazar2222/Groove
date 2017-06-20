@@ -187,22 +187,22 @@ namespace Groove
                 {
                     try { ((Instrument)m.m.Channels[x].Input).SetParams(new Note(temp[i].freq,0, temp[i].aftertouch, temp[i].pitchbend)); } catch { }
                 }
-                trackBar1.Value = php;
-                php++;
-                if (php == cells) {
-                    if (loop)
-                    {
-                        php = 0;
-                        trackBar1.Value = php;
-                    }
-                    else
-                    {
-                        php = 0;
-                        trackBar1.Value = php;
-                        timer1.Stop();
-                    }
+            }
+            trackBar1.Value = php;
+            php++;
+            if (php == cells)
+            {
+                if (loop)
+                {
+                    php = 0;
+                    trackBar1.Value = php;
                 }
-
+                else
+                {
+                    php = 0;
+                    trackBar1.Value = php;
+                    timer1.Stop();
+                }
             }
         }
 

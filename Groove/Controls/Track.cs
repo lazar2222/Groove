@@ -124,7 +124,7 @@ namespace Groove.Controls
         private void Input_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Input.Items[Input.SelectedIndex].ToString() == "None") { mc.Input = null; }
-            else if (Input.SelectedIndex < m.inst.Count + 1) { mc.Input = m.inst.Find(x => x.GetPluginInfo().name == Input.Items[Input.SelectedIndex].ToString()); }
+            else if (Input.SelectedIndex < m.inst.Count + 1) { mc.Input = (Instrument)Activator.CreateInstance(m.inst.Find(x => x.GetPluginInfo().name == Input.Items[Input.SelectedIndex].ToString()).GetType(), 48000); }
             else { mc.Input = m.m.HInps.Find(x => x.Name == Input.Items[Input.SelectedIndex].ToString()); }
         }
 
