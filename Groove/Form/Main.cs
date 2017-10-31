@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Groove
 {
@@ -44,7 +45,11 @@ namespace Groove
             TC = new List<Track>();
             piano = new PianoRoll(1,this);
             string s =AppDomain.CurrentDomain.BaseDirectory + @"\Plugins";
-            foreach (var item in System.IO.Directory.EnumerateFiles(s))
+            if(!Directory.Exists(s)) 
+            {
+                Directory.CreateDirectory(s);
+            }
+            foreach (var item in Directory.EnumerateFiles(s))
             {
                 var DLL = Assembly.LoadFile(item);
 
