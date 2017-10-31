@@ -43,7 +43,7 @@ namespace Groove
             TB = new List<Trackb>();
             TC = new List<Track>();
             piano = new PianoRoll(1,this);
-            string s = @"D:\SUBsynth\GROVE\Groove\Groove\bin\Debug\Plugins";
+            string s =AppDomain.CurrentDomain.BaseDirectory + @"\Plugins";
             foreach (var item in System.IO.Directory.EnumerateFiles(s))
             {
                 var DLL = Assembly.LoadFile(item);
