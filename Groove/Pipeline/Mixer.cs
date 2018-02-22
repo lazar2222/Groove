@@ -22,7 +22,7 @@ namespace Groove.Pipeline
             Buses = new List<Bus>();
             HOuts = new List<HardOut>();
             HInps = new List<HardInp>();
-            MasterC = new Master(64);
+            MasterC = new Master(512);
 
         }
 

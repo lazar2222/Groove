@@ -29,14 +29,14 @@ namespace Groove
         {
             if (track)
             {
-                Mixer.Channel c = new Mixer.Channel(64, textBox1.Text);
+                Mixer.Channel c = new Mixer.Channel(512, textBox1.Text);
                 m.m.Channels.Add(c);
                 Track t = new Track(m, c);
                 m.TC.Add(t);
             }
             else
             {
-                Mixer.Bus b = new Mixer.Bus(64, "Bus A");
+                Mixer.Bus b = new Mixer.Bus(512, "Bus A");
                 m.m.Buses.Add(b);
                 Trackb tb = new Trackb(m, b);
                 m.TB.Add(tb);

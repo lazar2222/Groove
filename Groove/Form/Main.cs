@@ -35,7 +35,7 @@ namespace Groove
         public int selectedINST = 0;
         int vel = 60;
         int octave = 4;
-        
+
 
         private void Main_Load(object sender, EventArgs e)
         {
@@ -43,26 +43,34 @@ namespace Groove
             eff = new List<AudioEffect>();
             TB = new List<Trackb>();
             TC = new List<Track>();
-            piano = new PianoRoll(1,this);
-            string s =AppDomain.CurrentDomain.BaseDirectory + @"\Plugins";
-            if(!Directory.Exists(s)) 
+            piano = new PianoRoll(1, this);
+            string s = AppDomain.CurrentDomain.BaseDirectory + @"\Plugins";
+            if (!Directory.Exists(s))
             {
                 Directory.CreateDirectory(s);
             }
             foreach (var item in Directory.EnumerateFiles(s))
             {
-                var DLL = Assembly.LoadFile(item);
-
-                foreach (Type type in DLL.GetExportedTypes())
+                if (item.EndsWith(".dll"))
                 {
                     try
                     {
-                        dynamic c = Activator.CreateInstance(type,48000);
-                        PluginInfo p = c.GetPluginInfo();
-                        if (p.type == PluginType.AudioEffect) { eff.Add(c); }
-                        else { inst.Add(c); }
+                        var DLL = Assembly.LoadFile(item);
+
+                        foreach (Type type in DLL.GetExportedTypes())
+                        {
+                            try
+                            {
+                                dynamic c = Activator.CreateInstance(type, 48000);
+                                PluginInfo p = c.GetPluginInfo();
+                                if (p.type == PluginType.AudioEffect) { eff.Add(c); }
+                                else { inst.Add(c); }
+                            }
+                            catch { Console.WriteLine(type + " Is not a plugn"); }
+                        }
+
                     }
-                    catch { Console.WriteLine(type + " Is not a plugn"); }
+                    catch { Console.WriteLine(item + " Errored"); }
                 }
             }
             timer1.Start();
@@ -91,7 +99,7 @@ namespace Groove
 
         private void Main_KeyDown(object sender, KeyEventArgs e)
         {
-            
+
             switch (e.KeyCode)
             {
                 case Keys.Z: { if (arr[0] != true) { octave--; if (octave < 0) { octave = 0; } } arr[0] = true; break; }
@@ -115,7 +123,7 @@ namespace Groove
 
         private void Main_KeyUp(object sender, KeyEventArgs e)
         {
-            
+
             switch (e.KeyCode)
             {
                 case Keys.Z: { if (arr[0] != false) { } arr[0] = false; break; }
@@ -146,7 +154,7 @@ namespace Groove
         {
             new Prompt(this, true);
             Reorder();
-            
+
         }
 
         private void addBusToolStripMenuItem_Click(object sender, EventArgs e)
