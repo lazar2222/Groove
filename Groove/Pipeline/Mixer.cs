@@ -310,6 +310,8 @@ namespace Groove.Pipeline
         {
             public float[][] Stereo;
 
+            public bool ALIAS = true;
+
             public Master(int bufsize)
             {
                 name = "Master";
@@ -384,6 +386,19 @@ namespace Groove.Pipeline
                 {
                     if (Math.Abs(Stereo[0][i]) > peaklvl[0]) { peaklvl[0] = Math.Abs(Stereo[0][i]); }
                     if (Math.Abs(Stereo[1][i]) > peaklvl[1]) { peaklvl[1] = Math.Abs(Stereo[1][i]); }
+                }
+                if (ALIAS)
+                {
+                    for (int i = 0; i < 2; i++)
+                    {
+                        for (int j = 1; j < Stereo[0].Length - 1; j++)
+                        {
+                            Stereo[i][j] = (Stereo[i][j - 1] + Stereo[i][j] + Stereo[i][j + 1]) / 3;
+                        }
+
+                        Stereo[i][0] = (Stereo[i][0] + Stereo[i][0] + Stereo[i][1]) / 3;
+                        Stereo[i][Stereo[0].Length - 1] = (Stereo[i][Stereo[0].Length - 2] + Stereo[i][Stereo[0].Length - 1] + Stereo[i][Stereo[0].Length - 1]) / 3;
+                    }
                 }
                 if (Output != null) { Output.Set(Stereo, ou); }
                 for (int i = 0; i < 2; i++)

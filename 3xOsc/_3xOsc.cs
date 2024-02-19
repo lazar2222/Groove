@@ -29,6 +29,7 @@ namespace _3xOsc
             public bool on = true;
             public long ts = 0;
             public long tsr = 0;
+            public float ev = 0;
         }
 
         public enum Shapes
@@ -77,26 +78,27 @@ namespace _3xOsc
                 stereo[1][i] = 0;
                 for (int j = 0; j < Notes.Count; j++)
                 {
+                    float L=0, R=0;
                     //osc 1
                     switch (Shape[0])
                     {
                         case Shapes.Sine:
                             {
-                                stereo[0][i] += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
-                                stereo[1][i] += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                L += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                R += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
                                 break;
                             }
                         case Shapes.Square:
                             {
-                                stereo[0][i] += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
-                                stereo[1][i] += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                L += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                R += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
                                 break;
                             }
                         case Shapes.Saw:
                             {
                                 double x = (NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 1"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count;
-                                stereo[0][i] += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
-                                stereo[1][i] += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                L += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                R += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
                                 break;
                             }
                         case Shapes.Triangle:
@@ -105,15 +107,15 @@ namespace _3xOsc
                                 if (val >= 1) { neg = true; }
                                 else if (val <= -1) { neg = false; }
                                 if (neg) { x = -x; }
-                                stereo[0][i] += (float)(val * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
-                                stereo[1][i] += (float)(val * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                L += (float)(val * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                R += (float)(val * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
                                 val += x;
                                 break;
                             }
                         case Shapes.Noise:
                             {
-                                stereo[0][i] += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
-                                stereo[1][i] += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                L += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
+                                R += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 1"], 0)) * Notes[j].velocity / 128d * d["Level 1"]);
                                 break;
                             }
                     }
@@ -122,21 +124,21 @@ namespace _3xOsc
                     {
                         case Shapes.Sine:
                             {
-                                stereo[0][i] += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
-                                stereo[1][i] += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                L += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                R += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
                                 break;
                             }
                         case Shapes.Square:
                             {
-                                stereo[0][i] += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
-                                stereo[1][i] += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                L += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                R += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
                                 break;
                             }
                         case Shapes.Saw:
                             {
                                 double x = (NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 2"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count;
-                                stereo[0][i] += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
-                                stereo[1][i] += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                L += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                R += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
                                 break;
                             }
                         case Shapes.Triangle:
@@ -145,15 +147,15 @@ namespace _3xOsc
                                 if (val >= 1) { neg = true; }
                                 else if (val <= -1) { neg = false; }
                                 if (neg) { x = -x; }
-                                stereo[0][i] += (float)(val * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
-                                stereo[1][i] += (float)(val * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                L += (float)(val * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                R += (float)(val * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
                                 val += x;
                                 break;
                             }
                         case Shapes.Noise:
                             {
-                                stereo[0][i] += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
-                                stereo[1][i] += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                L += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
+                                R += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 2"], 0)) * Notes[j].velocity / 128d * d["Level 2"]);
                                 break;
                             }
                     }
@@ -164,21 +166,21 @@ namespace _3xOsc
                         {
                             case Shapes.Sine:
                                 {
-                                    stereo[0][i] *= (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] *= (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L *= (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R *= (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                             case Shapes.Square:
                                 {
-                                    stereo[0][i] *= (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] *= (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L *= (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R *= (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                             case Shapes.Saw:
                                 {
                                     double x = (NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count;
-                                    stereo[0][i] *= (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] *= (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L *= (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R *= (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                             case Shapes.Triangle:
@@ -187,15 +189,15 @@ namespace _3xOsc
                                     if (val >= 1) { neg = true; }
                                     else if (val <= -1) { neg = false; }
                                     if (neg) { x = -x; }
-                                    stereo[0][i] *= (float)(val * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] *= (float)(val * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L *= (float)(val * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R *= (float)(val * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     val += x;
                                     break;
                                 }
                             case Shapes.Noise:
                                 {
-                                    stereo[0][i] *= (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] *= (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L *= (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R *= (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                         }
@@ -206,21 +208,21 @@ namespace _3xOsc
                         {
                             case Shapes.Sine:
                                 {
-                                    stereo[0][i] += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R += (float)(Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                             case Shapes.Square:
                                 {
-                                    stereo[0][i] += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R += (float)((Math.Sin((2 * Math.PI * NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count) > 0d ? 1d : -1d) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                             case Shapes.Saw:
                                 {
                                     double x = (NoteLib.NoteLib.Shift(Notes[j].freq, ((d["Tuning 3"] * 48d) - 24d) + Notes[j].pitchbend) / sr) * count;
-                                    stereo[0][i] += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R += (float)(((x - Math.Truncate(x)) * 2 - 1f) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                             case Shapes.Triangle:
@@ -229,30 +231,39 @@ namespace _3xOsc
                                     if (val >= 1) { neg = true; }
                                     else if (val <= -1) { neg = false; }
                                     if (neg) { x = -x; }
-                                    stereo[0][i] += (float)(val * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] += (float)(val * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L += (float)(val * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R += (float)(val * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     val += x;
                                     break;
                                 }
                             case Shapes.Noise:
                                 {
-                                    stereo[0][i] += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
-                                    stereo[1][i] += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    L += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(-1 * d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
+                                    R += (float)((r.NextDouble() * 2 - 1) * (1 + Math.Min(d["Pan 3"], 0)) * Notes[j].velocity / 128d * d["Level 3"]);
                                     break;
                                 }
                         }
                     }
                     //adsr
-                    stereo[0][i] *= (float)(
+                    L *= (float)(
                         Notes[j].on == true ?
                         (count - Notes[j].ts) < d["A"] ?
                         (1d / d["A"]) * (count - Notes[j].ts) :
                         (count - Notes[j].ts) < d["A"] + d["D"] ?
                         1 - ((1 - d["S"]) / d["D"]) * (count - d["A"] - Notes[j].ts) :
                         d["S"] :
-                        d["S"] - (d["S"] / d["R"]) * (count - Notes[j].tsr));
-                    stereo[1][i] *= (float)((count - Notes[j].ts) < d["A"] ? (1d / d["A"]) * (count - Notes[j].ts) : (count - Notes[j].ts) < d["A"] + d["D"] ? 1 - ((1 - d["S"]) / d["D"]) * (count - d["A"] - Notes[j].ts) : Notes[j].on == true ? d["S"] : d["S"] - (d["S"] / d["R"]) * (count - Notes[j].tsr));
+                        Notes[j].ev - (Notes[j].ev / d["R"]) * (count - Notes[j].tsr));
+                    R *= (float)(
+                        Notes[j].on == true ?
+                        (count - Notes[j].ts) < d["A"] ?
+                        (1d / d["A"]) * (count - Notes[j].ts) :
+                        (count - Notes[j].ts) < d["A"] + d["D"] ?
+                        1 - ((1 - d["S"]) / d["D"]) * (count - d["A"] - Notes[j].ts) :
+                        d["S"] :
+                        Notes[j].ev - (Notes[j].ev / d["R"]) * (count - Notes[j].tsr));
 
+                    stereo[0][i] += L;
+                    stereo[1][i] += R;
                     if (count - Notes[j].tsr > d["R"] && !Notes[j].on)
                     {
                         Notes.Remove(Notes[j]);
@@ -298,7 +309,13 @@ namespace _3xOsc
             MyNote n = Notes.Find(x => x.freq == note.freq && x.velocity != 0);
             n.aftertouch = note.aftertouch;
             n.pitchbend = note.pitchbend;
-            if (note.velocity == 0) { n.tsr = count; n.on = false; }
+            if (note.velocity == 0) { n.tsr = count; n.on = false;
+                n.ev = (float)((count - n.ts) < d["A"] ?
+                (1d / d["A"]) * (count - n.ts) :
+                (count - n.ts) < d["A"] + d["D"] ?
+                1 - ((1 - d["S"]) / d["D"]) * (count - d["A"] - n.ts) :
+                d["S"]);
+            }
             else { n.velocity = note.velocity; }
         }
 
